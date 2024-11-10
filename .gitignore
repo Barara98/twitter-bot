@@ -1,0 +1,11 @@
+# Ignore .env file (contains sensitive data like API keys)
+.env
+# Ignore Python virtual environment
+venv/
+__pycache__/
+# Ignore log files
+*.log
+# Ignore environment-specific files (e.g., for Docker)
+Dockerfile
+.dockerignore
+
