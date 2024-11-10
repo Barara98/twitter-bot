@@ -5,24 +5,24 @@ from celebrity_db import CelebrityDatabase
 
 class CelebrityArticleFetcher:
     def __init__(self):
-        self.celebrity_types = {"Q5", "Q33999", "Q488111", "Q483501"}  # IDs for Human, Actor, Band, Musician
+        self.celebrity_types = {"Q5", "Q33999", "Q488111", "Q483501"} 
         self.articles = []
         self.celebrities = []
-        self.database = CelebrityDatabase()  # Initialize the database
+        self.database = CelebrityDatabase()  
 
     def get_yesterdays_top_articles(self):
         yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y/%m/%d')
         url = f"https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia.org/all-access/{yesterday}"
 
         headers = {
-            'User-Agent': 'MyApp/1.0 (http://mywebsite.com/contact)'  # Replace with your app info
+            'User-Agent': 'MyApp/1.0 (http://mywebsite.com/contact)'  
         }
 
         try:
             response = requests.get(url, headers=headers)
             response.raise_for_status()
             data = response.json()
-            self.articles = [item['article'] for item in data['items'][0]['articles'][:75]]  # Get top 75 articles
+            self.articles = [item['article'] for item in data['items'][0]['articles'][:75]]  
         except requests.exceptions.RequestException as e:
             print(f"Error fetching top articles: {e}")
 
@@ -50,7 +50,7 @@ class CelebrityArticleFetcher:
             entity_data = data.get("entities", {}).get(wikidata_id, {})
             claims = entity_data.get("claims", {})
 
-            # Check for 'instance of' (P31) or 'occupation' (P106) properties
+
             for prop in ["P31", "P106"]:
                 if prop in claims:
                     for claim in claims[prop]:
@@ -61,13 +61,12 @@ class CelebrityArticleFetcher:
         return False
 
     def format_title(self, title):
-        # Replace underscores with spaces and remove parentheses
         title = title.replace('_', ' ')
-        title = title.split('(')[0].strip()  # Keep only the part before the first '('
+        title = title.split('(')[0].strip() 
         return title
 
     def fetch_celebrities(self):
-        self.celebrities = []  # Reset the list
+        self.celebrities = []  
         self.get_yesterdays_top_articles()
 
         for title in self.articles:
@@ -84,7 +83,6 @@ class CelebrityArticleFetcher:
                     self.database.add_to_database(title, wikidata_id, True)
                 else:
                     self.database.add_to_database(title, wikidata_id, False)
-            # Stop if we have found 24 celebrities
             if len(self.celebrities) >= 24:
                 break
 
