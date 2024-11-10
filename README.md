@@ -37,7 +37,3 @@ This will start fetching and posting data about the most talked-about celebritie
 
 - Python 3.x
 - Twitter API access (set up in `.env`)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
